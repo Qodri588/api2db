@@ -26,7 +26,7 @@ jobs:
 
       # Jalankan skrip
       - name: Run script
-        run: node script.js
+        run: node api2db.js
 
       # Simpan database hasil ke branch `database`
       - name: Push dood.db to database branch
