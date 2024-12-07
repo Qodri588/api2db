@@ -1,4 +1,4 @@
-name: Run Node.js Script and Upload Database
+name: Doodstream Automation
 
 on:
   push:
@@ -6,35 +6,37 @@ on:
       - master
 
 jobs:
-  run-script:
-    name: Execute Node.js Script
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout Repository
-      - name: Checkout Repository
+      # Checkout kode dari branch master
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Setup Node.js Environment
+      # Setup Node.js untuk menjalankan kode
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '16'
 
-      # Install Dependencies
-      - name: Install Dependencies
-        run: npm install
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install axios sqlite3
 
-      # Run Node.js Script
-      - name: Execute Script
-        run: node api2db.js
+      # Jalankan skrip
+      - name: Run script
+        run: node script.js
 
-      # Commit and Push Database File
-      - name: Commit and Push dood.db to 'database' branch
+      # Simpan database hasil ke branch `database`
+      - name: Push dood.db to database branch
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git checkout -b database
           git add dood.db
-          git commit -m "Add dood.db database"
-          git push origin database
+          git commit -m "Add dood.db"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} database
+    env:
+      API_KEY: 350871o0uomobcm787efod
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
